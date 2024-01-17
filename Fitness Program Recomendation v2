@@ -1,5 +1,5 @@
 class UserProfile:
-    def __init__(self, goal, sub_goal):
+    def __init__(self, goal, sub_goal=None):
         self.goal = goal
         self.sub_goal = sub_goal
 
@@ -8,24 +8,34 @@ class FitnessProgram:
         self.name = name
         self.description = description
 
+def get_user_selection(options):
+    for number, option in enumerate(options, 1):
+        print(f"{number}. {option}")
+    selection = int(input("Select a number: "))
+    return options[selection - 1]
+
 def recommend_program(user):
     if user.goal == "Body Composition":
         if user.sub_goal == "Muscle Gain":
-            return FitnessProgram("Hypertrophy Program", "Focused on muscle building with 8-10 reps of compound movements.")
+            return FitnessProgram("Hypertrophy Program", "Focused on muscle building with 8-12 reps.")
         elif user.sub_goal == "Fat Loss":
-            return FitnessProgram("Fat Loss Program", "Combines high intensity cardio with strength training.")
+            return FitnessProgram("Fat Loss Program", "Includes high intensity interval training.")
     elif user.goal == "Endurance":
-        return FitnessProgram("Endurance Program", "Emphasizes long-duration cardio and interval training.")
-    # Add more conditions for other goals
+        return FitnessProgram("Endurance Program", "Consists of long-duration cardio sessions.")
+    # Add more conditions for other goals as needed
     else:
-        return FitnessProgram("General Fitness", "A balanced routine suitable for overall fitness.")
+        return FitnessProgram("General Fitness", "A balanced routine suitable for overall health and fitness.")
 
 def main():
-    goal = input("What is your primary fitness goal (Body Composition, Endurance, etc.)? ")
-    sub_goal = None
+    print("What is your primary fitness goal?")
+    goals = ["Body Composition", "Endurance", "Flexibility", "Strength", "General Fitness"]
+    goal = get_user_selection(goals)
 
+    sub_goal = None
     if goal == "Body Composition":
-        sub_goal = input("Do you want to focus on Muscle Gain or Fat Loss? ")
+        print("Do you want to focus on Muscle Gain or Fat Loss?")
+        sub_goals = ["Muscle Gain", "Fat Loss"]
+        sub_goal = get_user_selection(sub_goals)
 
     user = UserProfile(goal, sub_goal)
     program = recommend_program(user)
