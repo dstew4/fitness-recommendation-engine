@@ -1,0 +1,37 @@
+class UserProfile:
+    def __init__(self, goal, sub_goal):
+        self.goal = goal
+        self.sub_goal = sub_goal
+
+class FitnessProgram:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+def recommend_program(user):
+    if user.goal == "Body Composition":
+        if user.sub_goal == "Muscle Gain":
+            return FitnessProgram("Hypertrophy Program", "Focused on muscle building with 8-10 reps of compound movements.")
+        elif user.sub_goal == "Fat Loss":
+            return FitnessProgram("Fat Loss Program", "Combines high intensity cardio with strength training.")
+    elif user.goal == "Endurance":
+        return FitnessProgram("Endurance Program", "Emphasizes long-duration cardio and interval training.")
+    # Add more conditions for other goals
+    else:
+        return FitnessProgram("General Fitness", "A balanced routine suitable for overall fitness.")
+
+def main():
+    goal = input("What is your primary fitness goal (Body Composition, Endurance, etc.)? ")
+    sub_goal = None
+
+    if goal == "Body Composition":
+        sub_goal = input("Do you want to focus on Muscle Gain or Fat Loss? ")
+
+    user = UserProfile(goal, sub_goal)
+    program = recommend_program(user)
+
+    print(f"\nRecommended Program: {program.name}")
+    print(f"Program Details: {program.description}")
+
+if __name__ == "__main__":
+    main()
