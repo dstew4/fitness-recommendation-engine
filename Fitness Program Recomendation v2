@@ -4,44 +4,290 @@ class UserProfile:
         self.sub_goal = sub_goal
 
 class FitnessProgram:
-    def __init__(self, name, description):
+    def __init__(self, name, weekly_routine):
         self.name = name
-        self.description = description
+        self.weekly_routine = weekly_routine
+
+    def display_program(self):
+        print(f"\nProgram Name: {self.name}")
+        for week, content in self.weekly_routine.items():
+            if week == "Instructions":
+                print("\nInstructions for Progression:")
+                print(content)
+            else:
+                print(f"\n{week}:")
+                for day, exercises in content.items():
+                    print(f"\n\t{day}:")
+                    for exercise, details in exercises.items():
+                        if 'sets' in details and 'reps' in details and 'weight' in details:
+                            print(f"\t\t{exercise}: {details['sets']} sets of {details['reps']} reps - {details['weight']}")
+                        else:
+                            # Handling different types of exercises (like in endurance program)
+                            detail_parts = [f"{key}: {value}" for key, value in details.items()]
+                            detail_str = ", ".join(detail_parts)
+                            print(f"\t\t{exercise}: {detail_str}")
 
 def get_user_selection(options):
-    for number, option in enumerate(options, 1):
-        print(f"{number}. {option}")
-    selection = int(input("Select a number: "))
-    return options[selection - 1]
+    while True:
+        for number, option in enumerate(options, 1):
+            print(f"{number}. {option}")
+        try:
+            selection = int(input("Select a number: "))
+            if 1 <= selection <= len(options):
+                return options[selection - 1]
+            else:
+                print("Invalid selection. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
-def recommend_program(user):
-    if user.goal == "Body Composition":
-        if user.sub_goal == "Muscle Gain":
-            return FitnessProgram("Hypertrophy Program", "Focused on muscle building with 8-12 reps.")
-        elif user.sub_goal == "Fat Loss":
-            return FitnessProgram("Fat Loss Program", "Includes high intensity interval training.")
-    elif user.goal == "Endurance":
-        return FitnessProgram("Endurance Program", "Consists of long-duration cardio sessions.")
-    # Add more conditions for other goals as needed
+def recommend_body_composition_program(sub_goal):
+    # Hypothetical routine structure for a 4-week hypertrophy program
+    hypertrophy_routine = {
+        "Week 1": {
+            "Day 1 - Chest and Triceps": {
+                "Bench Press": {"sets": 4, "reps": "12", "weight": "65% 1RM"},
+                "Incline Dumbbell Press": {"sets": 3, "reps": "12", "weight": "Moderate"},
+                "Cable Fly": {"sets": 3, "reps": "15", "weight": "Moderate"},
+                "Triceps Pushdown": {"sets": 4, "reps": "12", "weight": "Moderate"},
+                "Overhead Triceps Extension": {"sets": 3, "reps": "15", "weight": "Moderate"}
+            },
+            "Day 2 - Back and Biceps": {
+                "Pull-Ups": {"sets": 4, "reps": "12", "weight": "Bodyweight"},
+                "Barbell Bent Over Row": {"sets": 3, "reps": "12", "weight": "Moderate"},
+                "Seated Cable Row": {"sets": 3, "reps": "15", "weight": "Moderate"},
+                "Barbell Curl": {"sets": 4, "reps": "12", "weight": "Moderate"},
+                "Dumbbell Hammer Curl": {"sets": 3, "reps": "15", "weight": "Moderate"}
+            },
+            "Day 3 - Legs and Abs": {
+                "Squat": {"sets": 4, "reps": "12", "weight": "65% 1RM"},
+                "Leg Press": {"sets": 3, "reps": "12", "weight": "Moderate"},
+                "Leg Curl": {"sets": 3, "reps": "15", "weight": "Moderate"},
+                "Calf Raise": {"sets": 4, "reps": "20", "weight": "Moderate"},
+                "Crunches": {"sets": 3, "reps": "20", "weight": "Bodyweight"}
+            },
+            "Day 4 - Shoulders and Abs": {
+                "Military Press": {"sets": 4, "reps": "12", "weight": "65% 1RM"},
+                "Dumbbell Lateral Raise": {"sets": 3, "reps": "12", "weight": "Light"},
+                "Dumbbell Rear Delt Fly": {"sets": 3, "reps": "15", "weight": "Light"},
+                "Shrugs": {"sets": 4, "reps": "12", "weight": "Moderate"},
+                "Hanging Leg Raise": {"sets": 3, "reps": "15", "weight": "Bodyweight"}
+            },
+            "Day 5 - Rest or Light Cardio": {},
+            "Day 6 - Rest or Active Recovery": {},
+            "Day 7 - Rest": {}
+        },
+        "Instructions": "Repeat this routine for 12 weeks. For weeks 2-4, perform 9-11 reps per set; for weeks 5-8, perform 6-8 reps; for weeks 9-12, perform 3-5 reps. Increase the weight as the reps decrease."
+    }
+
+    
+    fat_loss_routine = {
+    "Week 1": {
+        "Day 1 - Full Body Strength": {
+            "Squat": {"sets": 3, "reps": "15", "weight": "60% 1RM"},
+            "Deadlift": {"sets": 3, "reps": "15", "weight": "60% 1RM"},
+            "Bench Press": {"sets": 3, "reps": "15", "weight": "60% 1RM"},
+            "Pull-Up": {"sets": 3, "reps": "Max", "weight": "Bodyweight"}
+        },
+        "Day 2 - HIIT Cardio": {
+            "Treadmill Sprints": {"sets": 10, "reps": "30 sec sprint / 1 min rest", "weight": "N/A"},
+            "Jump Rope": {"sets": 5, "reps": "1 min", "weight": "N/A"}
+        },
+        "Day 3 - Active Recovery": {
+            "Light Jog or Walk": {"sets": 1, "reps": "30 min", "weight": "N/A"}
+        },
+        "Day 4 - Full Body Strength + Cardio": {
+            "Kettlebell Swings": {"sets": 4, "reps": "20", "weight": "Moderate"},
+            "Burpees": {"sets": 4, "reps": "15", "weight": "N/A"},
+            "Dumbbell Lunges": {"sets": 4, "reps": "12 each leg", "weight": "Moderate"},
+            "Mountain Climbers": {"sets": 4, "reps": "1 min", "weight": "N/A"}
+        },
+        "Day 5 - HIIT Cardio": {
+            "Cycling Intervals": {"sets": 10, "reps": "1 min high intensity / 2 min low intensity", "weight": "N/A"}
+        },
+        "Day 6 - Active Recovery or Rest": {},
+        "Day 7 - Rest": {}
+    },
+    "Instructions": "Repeat this routine for 12 weeks. Adjust the weight and intensity as your fitness improves. Mix up the cardio exercises to keep the routine engaging."
+}
+
+    if sub_goal == "Muscle Gain":
+        return FitnessProgram("Hypertrophy Focused Program", hypertrophy_routine)
+    elif sub_goal == "Fat Loss":
+        # Placeholder for the fat loss routine
+        return FitnessProgram("Fat Loss Focused Program", fat_loss_routine)  # Empty dict or a defined routine
     else:
-        return FitnessProgram("General Fitness", "A balanced routine suitable for overall health and fitness.")
+        # Fallback routine
+        return FitnessProgram("Fallback Program", {})  # Empty dict or a defined routine
+    
+
+
+    
+def recommend_endurance_program():
+    endurance_routine = {
+        "Week 1": {
+            "Day 1 - Long Distance Running": {
+                "Running": {"duration": "45 min", "pace": "Steady, moderate"}
+            },
+            "Day 2 - Swimming": {
+                "Swimming": {"duration": "30 min", "style": "Continuous laps"}
+            },
+            "Day 3 - Cycling": {
+                "Cycling": {"duration": "1 hour", "pace": "Moderate"}
+            },
+            "Day 4 - Rest or Light Activity": {},
+            "Day 5 - Interval Training": {
+                "Sprint Intervals": {"reps": "10", "sprint": "30 sec", "rest": "1 min"}
+            },
+            "Day 6 - Cross-Training": {
+                "Rowing Machine": {"duration": "30 min", "intensity": "Moderate"},
+                "Elliptical Trainer": {"duration": "30 min", "intensity": "Moderate"}
+            },
+            "Day 7 - Long Slow Distance (LSD) Run": {
+                "Running": {"duration": "1 hour", "pace": "Easy, conversational"}
+            }
+        },
+        "Instructions": "Repeat this routine for several weeks, gradually increasing the duration and intensity. Listen to your body and adjust rest days as needed."
+    }
+
+    return FitnessProgram("Endurance Focused Program", endurance_routine)
+
+def recommend_flexibility_program():
+    flexibility_routine = {
+        "Week 1": {
+            "Day 1 - Dynamic Stretching": {
+                "Leg Swings": {"reps": "15 each leg"},
+                "Arm Circles": {"reps": "15 each arm"},
+                "Lunges with a Twist": {"reps": "10 each side"}
+            },
+            "Day 2 - Yoga for Flexibility": {
+                "Sun Salutations": {"duration": "15 min"},
+                "Downward Dog": {"hold": "1 min"},
+                "Pigeon Pose": {"hold": "1 min each side"}
+            },
+            "Day 3 - Pilates": {
+                "The Hundred": {"reps": "10"},
+                "Rolling Like a Ball": {"reps": "10"},
+                "Teaser": {"reps": "10"}
+            },
+            "Day 4 - Rest or Light Activity": {},
+            "Day 5 - Active Stretching": {
+                "Cat-Cow Stretch": {"reps": "15"},
+                "Butterfly Stretch": {"reps": "15"},
+                "Seated Hamstring Stretch": {"reps": "15"}
+            },
+            "Day 6 - Yoga Flow": {
+                "Vinyasa Flow": {"duration": "30 min"}
+            },
+            "Day 7 - Foam Rolling and Recovery": {
+                "Foam Roll Legs": {"duration": "10 min"},
+                "Foam Roll Back": {"duration": "10 min"},
+                "Foam Roll Shoulders": {"duration": "5 min"}
+            }
+        },
+        "Instructions": "Repeat this routine for several weeks, focusing on deep breathing and gentle stretching. Listen to your body and do not force any movement."
+    }
+
+    return FitnessProgram("Flexibility Focused Program", flexibility_routine)
+
+def recommend_strength_program():
+    strength_routine = {
+        "Week 1": {
+            "Day 1 - Squat Focus": {
+                "Squat": {"sets": 5, "reps": "5", "weight": "75% 1RM"},
+                "Leg Press": {"sets": 3, "reps": "8", "weight": "Moderate"},
+                "Leg Curl": {"sets": 3, "reps": "10", "weight": "Moderate"}
+            },
+            "Day 2 - Bench Press Focus": {
+                "Bench Press": {"sets": 5, "reps": "5", "weight": "75% 1RM"},
+                "Incline Dumbbell Press": {"sets": 3, "reps": "8", "weight": "Moderate"},
+                "Triceps Dips": {"sets": 3, "reps": "Max", "weight": "Bodyweight"}
+            },
+            "Day 3 - Rest or Active Recovery": {},
+            "Day 4 - Deadlift Focus": {
+                "Deadlift": {"sets": 5, "reps": "5", "weight": "75% 1RM"},
+                "Barbell Row": {"sets": 3, "reps": "8", "weight": "Moderate"},
+                "Pull-Ups": {"sets": 3, "reps": "Max", "weight": "Bodyweight"}
+            },
+            "Day 5 - Accessory Work": {
+                "Lunges": {"sets": 3, "reps": "10 each leg", "weight": "Moderate"},
+                "Shoulder Press": {"sets": 3, "reps": "8", "weight": "Moderate"},
+                "Bicep Curls": {"sets": 3, "reps": "10", "weight": "Moderate"}
+            },
+            "Day 6 - Rest or Light Cardio": {},
+            "Day 7 - Rest": {}
+        },
+        "Instructions": "Follow this routine for 4 weeks, increasing the weight by 5% each week while maintaining the rep scheme. Ensure proper form and sufficient recovery."
+    }
+
+    return FitnessProgram("Strength Focused Program", strength_routine)
+
+def recommend_general_fitness_program():
+    general_fitness_routine = {
+        "Week 1": {
+            "Day 1 - Full Body Strength & Cardio": {
+                "Circuit Training": {"rounds": 3, "exercises": "Squats, Push-Ups, Lunges, Dumbbell Rows, Jump Rope", "duration": "1 min per exercise"},
+                "Cool Down": {"Stretching": "10 min"}
+            },
+            "Day 2 - Cardio & Core": {
+                "Jogging": {"duration": "30 min", "pace": "Moderate"},
+                "Core Workout": {"Plank": "3 sets of 1 min", "Russian Twists": "3 sets of 15 reps"}
+            },
+            "Day 3 - Active Recovery": {
+                "Yoga": {"duration": "30 min"}
+            },
+            "Day 4 - High Intensity Interval Training (HIIT)": {
+                "HIIT Session": {"rounds": 5, "exercises": "Burpees, Mountain Climbers, High Knees, Squat Jumps", "work": "30 sec", "rest": "30 sec"}
+            },
+            "Day 5 - Strength & Mobility": {
+                "Kettlebell Workout": {"exercises": "Swings, Goblet Squats, Turkish Get-Ups", "reps": "10-15 reps per exercise"},
+                "Mobility Drills": {"duration": "15 min"}
+            },
+            "Day 6 - Endurance Cardio": {
+                "Cycling": {"duration": "1 hour", "pace": "Steady"}
+            },
+            "Day 7 - Rest or Light Activity": {}
+        },
+        "Instructions": "Repeat this program for several weeks, gradually increasing intensity or duration as fitness improves. Listen to your body and adjust the exercises to suit your needs."
+    }
+
+    return FitnessProgram("General Fitness Program", general_fitness_routine)
+
 
 def main():
-    print("What is your primary fitness goal?")
-    goals = ["Body Composition", "Endurance", "Flexibility", "Strength", "General Fitness"]
-    goal = get_user_selection(goals)
+    while True:
+        print("What is your primary fitness goal?")
+        goals = ["Body Composition", "Endurance", "Flexibility", "Strength", "General Fitness", "Exit"]
+        goal = get_user_selection(goals)
 
-    sub_goal = None
-    if goal == "Body Composition":
-        print("Do you want to focus on Muscle Gain or Fat Loss?")
-        sub_goals = ["Muscle Gain", "Fat Loss"]
-        sub_goal = get_user_selection(sub_goals)
+        if goal == "Exit":
+            print("Exiting the program. Have a great day!")
+            break
 
-    user = UserProfile(goal, sub_goal)
-    program = recommend_program(user)
+        program = None
 
-    print(f"\nRecommended Program: {program.name}")
-    print(f"Program Details: {program.description}")
+        if goal == "Body Composition":
+            print("Do you want to focus on Muscle Gain or Fat Loss?")
+            sub_goals = ["Muscle Gain", "Fat Loss"]
+            sub_goal = get_user_selection(sub_goals)
+            program = recommend_body_composition_program(sub_goal)
+        elif goal == "Endurance":
+            program = recommend_endurance_program()
+        elif goal == "Flexibility":
+            program = recommend_flexibility_program()
+        elif goal == "Strength":
+            program = recommend_strength_program()
+        elif goal == "General Fitness":
+            program = recommend_general_fitness_program()
+
+        if program:
+            program.display_program()
+
+        # Ask if the user wants to select another program
+        continue_choice = input("\nWould you like to choose another program? (yes/no): ")
+        if continue_choice.lower() != "yes":
+            print("Thank you for using the fitness program. Stay healthy!")
+            break
 
 if __name__ == "__main__":
     main()
+
